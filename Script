@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - The Next-Gen Social Network</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .active-tab { border-bottom: 4px solid #1877f2; color: #1877f2; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50 px-4 py-2 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="bg-blue-600 text-white p-2 rounded-full font-bold text-xl w-10 h-10 flex items-center justify-center">N</div>
+            <span class="text-2xl font-black text-blue-600 tracking-tight hidden sm:inline">nexus</span>
+        </div>
+        
+        <div class="relative w-1/3">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input type="text" id="userSearch" onkeyup="searchUsers()" placeholder="Search users (e.g., Alice, Bob)..." class="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            <div id="searchResults" class="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-200 hidden max-h-60 overflow-y-auto z-50"></div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <button onclick="switchTab('feed')" class="p-2 hover:bg-gray-100 rounded-full text-xl text-gray-600 relative" title="Home Feed">
+                <i class="fa-solid fa-house"></i>
+            </button>
+            <button onclick="switchTab('messages')" class="p-2 hover:bg-gray-100 rounded-full text-xl text-gray-600 relative" title="Messages">
+                <i class="fa-solid fa-message"></i>
+                <span id="msgBadge" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center hidden">1</span>
+            </button>
+            <div onclick="switchTab('profile')" class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-gray-100 rounded-full">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-8 h-8 rounded-full object-cover" alt="My Profile">
+                <span class="font-semibold text-sm hidden md:inline" id="navProfileName">Jane Doe</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+        
+        <aside class="hidden md:block col-span-1 space-y-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div onclick="switchTab('profile')" class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <p class="font-bold text-sm" id="sidebarProfileName">Jane Doe</p>
+                        <p class="text-xs text-gray-500">View Profile</p>
+                    </div>
+                </div>
+                <hr class="my-3 border-gray-100">
+                <nav class="space-y-1">
+                    <button onclick="switchTab('feed')" class="w-full flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded-lg font-medium transition text-sm text-gray-700">
+                        <i class="fa-solid fa-newspaper text-blue-500 text-lg"></i> <span>Feed</span>
+                    </button>
+                    <button onclick="switchTab('messages')" class="w-full flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded-lg font-medium transition text-sm text-gray-700">
+                        <i class="fa-solid fa-comment-dots text-green-500 text-lg"></i> <span>Direct Messages</span>
+                    </button>
+                </nav>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm">
+                <h3 class="font-bold text-gray-700 mb-3 flex justify-between items-center">
+                    <span>Groups Explorer</span>
+                    <i class="fa-solid fa-users text-gray-400"></i>
+                </h3>
+                <div id="groupsList" class="space-y-2">
+                    </div>
+            </div>
+        </aside>
+
+        <main class="col-span-1 md:col-span-2 space-y-6">
+            
+            <section id="feedTab" class="space-y-6">
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="flex space-x-3">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-10 h-10 rounded-full object-cover">
+                        <textarea id="postInput" placeholder="What's on your mind, Jane? Share a TikTok style vibe..." class="w-full bg-gray-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none h-20"></textarea>
+                    </div>
+                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-100">
+                        <span id="groupContextTag" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-medium hidden">Posting to Group</span>
+                        <div class="flex space-x-2">
+                            <button onclick="clearGroupContext()" id="clearGroupBtn" class="hidden text-xs text-red-500 hover:underline">Cancel Group Post</button>
+                        </div>
+                        <button onclick="createNewPost()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-1.5 rounded-full text-sm shadow transition">Post</button>
+                    </div>
+                </div>
+
+                <div id="postsFeed" class="space-y-4">
+                    </div>
+            </section>
+
+            <section id="profileTab" class="bg-white rounded-xl shadow-sm overflow-hidden hidden">
+                <div class="h-32 bg-gradient-to-r refinement bg-blue-500 to-indigo-600 relative"></div>
+                <div class="px-6 pb-6 relative">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between -mt-16 mb-4 sm:space-x-4">
+                        <img id="profileViewAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-28 h-28 rounded-full border-4 border-white object-cover shadow-md bg-white">
+                        <div class="mt-4 sm:mt-0 flex-1">
+                            <h2 id="profileViewName" class="text-2xl font-black">Jane Doe</h2>
+                            <p id="profileViewHandle" class="text-gray-500 text-sm">@janedoe</p>
+                        </div>
+                        <div id="profileActionArea" class="mt-4 sm:mt-0">
+                            </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 py-3 border-y border-gray-100 text-center my-4">
+                        <div><p id="profileFriendsCount" class="font-bold text-lg text-gray-800">12</p><p class="text-xs text-gray-500 tracking-wide uppercase">Friends</p></div>
+                        <div><p id="profilePostsCount" class="font-bold text-lg text-gray-800">4</p><p class="text-xs text-gray-500 tracking-wide uppercase">Posts</p></div>
+                        <div><p class="font-bold text-lg text-gray-800">8</p><p class="text-xs text-gray-500 tracking-wide uppercase">Groups</p></div>
+                    </div>
+                    <h3 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-images mr-1"></i> Timeline Activity</h3>
+                    <div id="profilePostsFeed" class="space-y-4"></div>
+                </div>
+            </section>
+
+            <section id="messagesTab" class="bg-white rounded-xl shadow-sm grid grid-cols-3 h-[600px] overflow-hidden hidden">
+                <div class="col-span-1 border-r border-gray-200 flex flex-col">
+                    <div class="p-3 font-bold text-lg border-b border-gray-100">Chats</div>
+                    <div id="dmUserList" class="flex-1 overflow-y-auto divide-y divide-gray-50">
+                        </div>
+                </div>
+                <div class="col-span-2 flex flex-col bg-gray-50">
+                    <div id="chatHeader" class="p-3 bg-white border-b border-gray-200 font-bold flex items-center space-x-2">
+                        <span class="text-gray-400 text-sm">Select a friend to begin messaging</span>
+                    </div>
+                    <div id="chatMessagesWindow" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col justify-end">
+                        <div class="text-center text-gray-400 text-sm my-auto">No open conversation</div>
+                    </div>
+                    <div id="chatInputArea" class="p-3 bg-white border-t border-gray-200 flex items-center space-x-2 hidden">
+                        <input type="text" id="chatMessageInput" placeholder="Type a secure live message..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="sendDirectMessage()" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 w-9 h-9 flex items-center justify-center transition shadow">
+                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <aside class="col-span-1 space-y-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm">
+                <h3 class="font-bold text-gray-700 mb-3 flex justify-between items-center">
+                    <span>Friend Requests</span>
+                    <span id="requestCountBadge" class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">1</span>
+                </h3>
+                <div id="friendRequestsContainer" class="space-y-3">
+                    </div>
+            </div>
+            
+            <div class="bg-white p-4 rounded-xl shadow-sm text-xs text-gray-400 space-y-1">
+                <p>&copy; 2026 Nexus Core UI Engine. Built mimicking standard Facebook features.</p>
+                <p>Perfect structural platform to copy/paste directly into GitHub.</p>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        // --- DATA LAYER SETUP ---
+        const CURRENT_USER = { id: 'user_me', name: 'Jane Doe', handle: 'janedoe', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', friends: ['user_2'] };
+        
+        let database = {
+            users: [
+                { id: 'user_1', name: 'Alice Smith', handle: 'alicesmith', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', friends: [] },
+                { id: 'user_2', name: 'Bob Johnson', handle: 'bobjohnson', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', friends: ['user_me'] },
+                { id: 'user_3', name: 'Charlie Brown', handle: 'goodgrief', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', friends: [] }
+            ],
+            posts: [
+                { id: 'post_1', userId: 'user_2', authorName: 'Bob Johnson', authorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', content: 'Just launched my brand new web framework UI. Check it out on GitHub! 🚀 #coding', timestamp: '2 hours ago', group: null, likes: 5 },
+                { id: 'post_2', userId: 'user_1', authorName: 'Alice Smith', authorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', content: 'Incredible sunrise hike today! Coffee tastes 10x better up here.', timestamp: '5 hours ago', group: 'Nature Lovers', likes: 12 }
+            ],
+            friendRequests: [
+                { fromId: 'user_1', fromName: 'Alice Smith', fromAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' }
+            ],
+            groups: [
+                { id: 'g1', name: 'Tech & Architecture', members: 124, joined: true },
+                { id: 'g2', name: 'Nature Lovers', members: 89, joined: false },
+                { id: 'g3', name: 'UI/UX Design Elite', members: 210, joined: true }
+            ],
+            messages: [
+                { senderId: 'user_2', recipientId: 'user_me', text: 'Hey Jane! Did you catch that updated repo on GitHub?', timestamp: 'Yesterday' }
+            ]
+        };
+
+        // Initialize Local Storage Support
+        if (!localStorage.getItem('nexus_db')) {
+            localStorage.setItem('nexus_db', JSON.stringify(database));
+        } else {
+            database = JSON.parse(localStorage.getItem('nexus_db'));
+        }
+
+        function saveState() {
+            localStorage.setItem('nexus_db', JSON.stringify(database));
+        }
+
+        // Active State Tracking Variables
+        let currentActiveGroupFilter = null;
+        let activeChatUserId = null;
+        let activeProfileViewId = 'user_me';
+
+        // --- APP ENGINE INITIALIZATION ---
+        window.onload = function() {
+            renderFeed();
+            renderGroupsList();
+            renderFriendRequests();
+            renderDMUserList();
+            updateUINames();
+        };
+
+        function updateUINames() {
+            document.getElementById('navProfileName').innerText = CURRENT_USER.name;
+            document.getElementById('sidebarProfileName').innerText = CURRENT_USER.name;
+        }
+
+        // --- TAB SWITCHING ARCHITECTURE ---
+        function switchTab(tabId) {
+            document.getElementById('feedTab').classList.add('hidden');
+            document.getElementById('profileTab').classList.add('hidden');
+            document.getElementById('messagesTab').classList.add('hidden');
+
+            if (tabId === 'feed') {
+                document.getElementById('feedTab').classList.remove('hidden');
+            } else if (tabId === 'profile') {
+                activeProfileViewId = 'user_me';
+                renderProfilePage();
+                document.getElementById('profileTab').classList.remove('hidden');
+            } else if (tabId === 'messages') {
+                renderDMUserList();
+                document.getElementById('messagesTab').classList.remove('hidden');
+            }
+        }
+
+        // --- USER SEARCH ENGINE MECHANICS ---
+        function searchUsers() {
+            const query = document.getElementById('userSearch').value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (!query) {
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+
+            resultsContainer.innerHTML = '';
+            resultsContainer.classList.remove('hidden');
+
+            const allUsers = [...database.users, { id: 'user_me', name: CURRENT_USER.name, handle: CURRENT_USER.handle, avatar: CURRENT_USER.avatar }];
+            const matched = allUsers.filter(u => u.name.toLowerCase().includes(query) || u.handle.toLowerCase().includes(query));
+
+            if (matched.length === 0) {
+                resultsContainer.innerHTML = `<div class="p-3 text-sm text-gray-500 text-center">No results found for "${query}"</div>`;
+                return;
+            }
+
+            matched.forEach(user => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between p-3 hover:bg-gray-50 cursor-pointer transition";
+                item.onclick = () => {
+                    activeProfileViewId = user.id;
+                    renderProfilePage();
+                    document.getElementById('feedTab').classList.add('hidden');
+                    document.getElementById('messagesTab').classList.add('hidden');
+                    document.getElementById('profileTab').classList.remove('hidden');
+                    resultsContainer.classList.add('hidden');
+                    document.getElementById('userSearch').value = '';
+                };
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <img src="${user.avatar}" class="w-8 h-8 rounded-full object-cover">
+                        <div>
+                            <p class="text-sm font-bold text-gray-800">${user.name}</p>
+                            <p class="text-xs text-gray-500">@${user.handle}</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                `;
+                resultsContainer.appendChild(item);
+            });
+        }
+
+        // --- POST FEED CREATION AND LIKES SYSTEM ---
+        function createNewPost() {
+            const content = document.getElementById('postInput').value.trim();
+            if (!content) return alert('Cannot post empty content!');
+
+            const newPost = {
+                id: 'post_' + Date.now(),
+                userId: CURRENT_USER.id,
+                authorName: CURRENT_USER.name,
+                authorAvatar: CURRENT_USER.avatar,
+                content: content,
+                timestamp: 'Just now',
+                group: currentActiveGroupFilter,
+                likes: 0
+            };
+
+            database.posts.unshift(newPost);
+            saveState();
+            document.getElementById('postInput').value = '';
+            renderFeed();
+        }
+
+        function renderFeed() {
+            const feedContainer = document.getElementById('postsFeed');
+            feedContainer.innerHTML = '';
+
+            let filteredPosts = database.posts;
+            if (currentActiveGroupFilter) {
+                filteredPosts = database.posts.filter(p => p.group === currentActiveGroupFilter);
+            }
+
+            if (filteredPosts.length === 0) {
+                feedContainer.innerHTML = `
+                    <div class="bg-white p-6 rounded-xl shadow-sm text-center text-gray-500 text-sm">
+                        No posts found here yet. Start the conversation!
+                    </div>`;
+                return;
+            }
+
+            filteredPosts.forEach(post => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl shadow-sm space-y-3 border border-gray-100";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3 cursor-pointer" onclick="activeProfileViewId='${post.userId}'; renderProfilePage(); switchTab('profile');">
+                            <img src="${post.authorAvatar}" class="w-10 h-10 rounded-full object-cover">
+                            <div>
+                                <div class="flex items-center space-x-1">
+                                    <span class="font-bold text-sm hover:underline">${post.authorName}</span>
+                                    ${post.group ? `<span class="text-xs text-gray-400 font-normal">in</span> <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${post.group}</span>` : ''}
+                                </div>
+                                <p class="text-xs text-gray-400">${post.timestamp}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm whitespace-pre-wrap leading-relaxed text-gray-800">${post.content}</p>
+                    <div class="flex items-center pt-2 border-t border-gray-50 text-gray-500 text-xs font-semibold">
+                        <button onclick="likePost('${post.id}')" class="flex items-center space-x-2 hover:bg-gray-100 px-3 py-1.5 rounded-lg transition text-red-500">
+                            <i class="fa-solid fa-heart"></i>
+                            <span>${post.likes} Likes</span>
+                        </button>
+                    </div>
+                `;
+                feedContainer.appendChild(card);
+            });
+        }
+
+        function likePost(postId) {
+            const target = database.posts.find(p => p.id === postId);
+            if (target) {
+                target.likes++;
+                saveState();
+                renderFeed();
+                if (document.getElementById('profileTab').classList.contains('hidden') === false) {
+                    renderProfilePage();
+                }
+            }
+        }
+
+        // --- GROUPS INTERACTION SYSTEM ---
+        function renderGroupsList() {
+            const list = document.getElementById('groupsList');
+            list.innerHTML = '';
+            database.groups.forEach(group => {
+                const div = document.createElement('div');
+                div.className = `flex justify-between items-center p-2 rounded-lg text-xs transition cursor-pointer ${currentActiveGroupFilter === group.name ? 'bg-blue-100 text-blue-700 font-bold' : 'hover:bg-gray-50'}`;
+                div.innerHTML = `
+                    <div onclick="selectGroupFilter('${group.name}')" class="flex-1">
+                        <p class="font-bold">${group.name}</p>
+                        <p class="text-gray-400 text-[10px]">${group.members} members</p>
+                    </div>
+                    <button onclick="toggleJoinGroup('${group.id}', event)" class="px-2 py-0.5 font-semibold rounded text-[10px] shadow-sm ${group.joined ? 'bg-gray-200 text-gray-600' : 'bg-blue-600 text-white'}">
+                        ${group.joined ? 'Joined' : 'Join'}
+                    </button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function selectGroupFilter(groupName) {
+            if (currentActiveGroupFilter === groupName) {
+                clearGroupContext();
+            } else {
+                currentActiveGroupFilter = groupName;
+                document.getElementById('groupContextTag').innerText = `Posting to: ${groupName}`;
+                document.getElementById('groupContextTag').classList.remove('hidden');
+                document.getElementById('clearGroupBtn').classList.remove('hidden');
+                renderGroupsList();
+                renderFeed();
+            }
+        }
+
+        function clearGroupContext() {
+            currentActiveGroupFilter = null;
+            document.getElementById('groupContextTag').classList.add('hidden');
+            document.getElementById('clearGroupBtn').classList.add('hidden');
+            renderGroupsList();
+            renderFeed();
+        }
+
+        function toggleJoinGroup(id, e) {
+            e.stopPropagation();
+            const group = database.groups.find(g => g.id === id);
+            if (group) {
+                group.joined = !group.joined;
+                group.members += group.joined ? 1 : -1;
+                saveState();
+                renderGroupsList();
+            }
+        }
+
+        // --- FRIEND REQUEST MECHANICAL OPERATIONS ---
+        function renderFriendRequests() {
+            const container = document.getElementById('friendRequestsContainer');
+            document.getElementById('requestCountBadge').innerText = database.friendRequests.length;
+            container.innerHTML = '';
+
+            if (database.friendRequests.length === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-400 text-center py-2">No pending requests</p>';
+                return;
+            }
+
+            database.friendRequests.forEach(req => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between p-2 bg-gray-50 rounded-lg border border-gray-100";
+                item.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <img src="${req.fromAvatar}" class="w-8 h-8 rounded-full object-cover">
+                        <span class="text-xs font-bold text-gray-700">${req.fromName}</span>
+                    </div>
+                    <div class="flex space-x-1">
+                        <button onclick="acceptFriend('${req.fromId}')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2 py-1 font-bold rounded shadow-sm"><i class="fa-solid fa-check"></i></button>
+                        <button onclick="rejectFriend('${req.fromId}')" class="bg-gray-200 hover:bg-gray-300 text-gray-600 text-[10px] px-2 py-1 font-bold rounded shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function acceptFriend(fromId) {
+            CURRENT_USER.friends.push(fromId);
+            const user = database.users.find(u => u.id === fromId);
+            if (user) user.friends.push('user_me');
+            
+            database.friendRequests = database.friendRequests.filter(r => r.fromId !== fromId);
+            saveState();
+            renderFriendRequests();
+            if (activeProfileViewId === 'user_me' || activeProfileViewId === fromId) renderProfilePage();
+        }
+
+        function rejectFriend(fromId) {
+            database.friendRequests = database.friendRequests.filter(r => r.fromId !== fromId);
+            saveState();
+            renderFriendRequests();
+        }
+
+        function sendFriendRequest(targetUserId) {
+            const alreadySent = database.friendRequests.some(r => r.fromId === CURRENT_USER.id);
+            if (alreadySent) return alert('Friend request already pending execution!');
+            
+            alert('Mechanical simulated friend request sent successfully!');
+            saveState();
+            renderProfilePage();
+        }
+
+        // --- PROFILE VIEWS RENDER LOGIC ---
+        function renderProfilePage() {
+            const isMe = activeProfileViewId === 'user_me';
+            let userObj = isMe ? CURRENT_USER : database.users.find(u => u.id === activeProfileViewId);
+
+            if (!userObj) return;
+
+            document.getElementById('profileViewAvatar').src = userObj.avatar;
+            document.getElementById('profileViewName').innerText = userObj.name;
+            document.getElementById('profileViewHandle').innerText = `@${userObj.handle}`;
+            
+            // Friends UI Logic Counts
+            document.getElementById('profileFriendsCount').innerText = userObj.friends ? userObj.friends.length : 0;
+
+            // Compute Posts Count
+            const userPosts = database.posts.filter(p => p.userId === userObj.id);
+            document.getElementById('profilePostsCount').innerText = userPosts.length;
+
+            // Action Button Engine Conditional Logic
+            const actionArea = document.getElementById('profileActionArea');
+            if (isMe) {
+                actionArea.innerHTML = `<button class="bg-gray-200 text-gray-700 font-bold px-4 py-1.5 rounded-full text-xs">Edit UI Profile</button>`;
+            } else {
+                const isFriend = CURRENT_USER.friends.includes(userObj.id);
+                if (isFriend) {
+                    actionArea.innerHTML = `<span class="bg-green-100 text-green-700 font-bold px-4 py-1.5 rounded-full text-xs flex items-center gap-1"><i class="fa-solid fa-user-check"></i> Friends</span>`;
+                } else {
+                    actionArea.innerHTML = `<button onclick="sendFriendRequest('${userObj.id}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-1.5 rounded-full text-xs transition shadow"><i class="fa-solid fa-user-plus mr-1"></i> Add Friend</button>`;
+                }
+            }
+
+            // Local user timeline feed
+            const container = document.getElementById('profilePostsFeed');
+            container.innerHTML = '';
+            if (userPosts.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 text-center py-6">No historical posts on timeline.</p>`;
+            } else {
+                userPosts.forEach(post => {
+                    const block = document.createElement('div');
+                    block.className = "p-3 bg-gray-50 border border-gray-100 rounded-lg text-sm";
+                    block.innerHTML = `
+                        <p class="text-xs text-gray-400 mb-1">${post.timestamp}</p>
+                        <p class="text-gray-800 mb-2">${post.content}</p>
+                        <div class="text-xs text-red-500 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-heart"></i> ${post.likes}
+                        </div>
+                    `;
+                    container.appendChild(block);
+                });
+            }
+        }
+
+        // --- LIVE CONVERSATIONS ENGINE (DMs) ---
+        function renderDMUserList() {
+            const list = document.getElementById('dmUserList');
+            list.innerHTML = '';
+
+            // Filter friends allowed to chat
+            const chatableUsers = database.users.filter(u => CURRENT_USER.friends.includes(u.id));
+
+            if (chatableUsers.length === 0) {
+                list.innerHTML = '<p class="p-4 text-xs text-gray-400 text-center">Add friends to start messaging</p>';
+                return;
+            }
+
+            chatableUsers.forEach(user => {
+                const row = document.createElement('div');
+                row.className = `p-3 flex items-center space-x-3 cursor-pointer transition ${activeChatUserId === user.id ? 'bg-blue-50 border-r-4 border-blue-600' : 'hover:bg-gray-50'}`;
+                row.onclick = () => selectActiveChatUser(user.id);
+                row.innerHTML = `
+                    <img src="${user.avatar}" class="w-9 h-9 rounded-full object-cover">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold truncate text-gray-800">${user.name}</p>
+                        <p class="text-[11px] text-gray-400 truncate">Click to message</p>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function selectActiveChatUser(userId) {
+            activeChatUserId = userId;
+            renderDMUserList();
+            
+            const user = database.users.find(u => u.id === userId);
+            document.getElementById('chatHeader').innerHTML = `
+                <img src="${user.avatar}" class="w-8 h-8 rounded-full object-cover">
+                <div>
+                    <p class="text-sm font-bold text-gray-800">${user.name}</p>
+                    <p class="text-[10px] text-green-500 font-semibold">● Online Node Connected</p>
+                </div>
+            `;
+            
+            document.getElementById('chatInputArea').classList.remove('hidden');
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            const target = document.getElementById('chatMessagesWindow');
+            target.innerHTML = '';
+
+            const convo = database.messages.filter(m => 
+                (m.senderId === CURRENT_USER.id && m.recipientId === activeChatUserId) ||
+                (m.senderId === activeChatUserId && m.recipientId === CURRENT_USER.id)
+            );
+
+            if (convo.length === 0) {
+                target.innerHTML = '<p class="text-center text-xs text-gray-400 my-auto">No prior logs. Say hello!</p>';
+                return;
+            }
+
+            convo.forEach(m => {
+                const isMe = m.senderId === CURRENT_USER.id;
+                const outer = document.createElement('div');
+                outer.className = `flex ${isMe ? 'justify-end' : 'justify-start'}`;
+                outer.innerHTML = `
+                    <div class="${isMe ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white border border-gray-200 text-gray-800 rounded-bl-none'} rounded-2xl max-w-xs px-3 py-1.5 shadow-sm text-xs">
+                        <p>${m.text}</p>
+                    </div>
+                `;
+                target.appendChild(outer);
+            });
+            target.scrollTop = target.scrollHeight;
+        }
+
+        function sendDirectMessage() {
+            const input = document.getElementById('chatMessageInput');
+            const txt = input.value.trim();
+            if (!txt || !activeChatUserId) return;
+
+            const msg = {
+                senderId: CURRENT_USER.id,
+                recipientId: activeChatUserId,
+                text: txt,
+                timestamp: 'Just now'
+            };
+
+            database.messages.push(msg);
+            saveState();
+            input.value = '';
+            renderChatMessages();
+        }
+    </script>
+</body>
+</html>
