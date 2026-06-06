@@ -3,137 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arab Book - Connecting the Arab World</title>
+    <title>Arab Book - Personalized Network Engine</title>
+    <!-- Tailwind CSS for sleek UI -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #f3f4f6; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        .active-tab { border-bottom: 4px solid #059669; color: #059669; }
     </style>
 </head>
 <body class="text-gray-800">
 
-    <nav class="bg-white shadow-md sticky top-0 z-50 px-4 py-2 flex justify-between items-center">
+    <!-- REGISTRATION / ACCOUNT CREATION MODAL -->
+    <div id="authModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="text-center">
+                <div class="bg-emerald-600 text-white w-12 h-12 rounded-full font-bold text-2xl flex items-center justify-center mx-auto shadow-md">A</div>
+                <h2 class="text-xl font-black mt-2 text-emerald-700">Create Your Arab Book Account</h2>
+                <p class="text-xs text-gray-400">Set up a customized real identity for this browser session.</p>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">YOUR REAL NAME</label>
+                    <input type="text" id="regName" placeholder="e.g., Ahmad Al-Mansoori" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">CHOOSE A UNIQUE USERNAME</label>
+                    <input type="text" id="regHandle" placeholder="e.g., ahmad_99" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">SELECT AVATAR VIBE</label>
+                    <select id="regAvatar" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm bg-white">
+                        <option value="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150">Professional Male Avatar</option>
+                        <option value="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150">Professional Female Avatar</option>
+                        <option value="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150">Casual Creative Avatar</option>
+                        <option value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150">Classic Modern Avatar</option>
+                    </select>
+                </div>
+                <button onclick="executeRegistration()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl transition shadow">Initialize Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP NAVIGATION INTERFACE -->
+    <nav class="bg-white shadow-md sticky top-0 z-40 px-4 py-2 flex justify-between items-center">
         <div class="flex items-center space-x-2">
-            <div class="bg-emerald-600 text-white p-2 rounded-full font-bold text-xl w-10 h-10 flex items-center justify-center shadow-md">A</div>
+            <div class="bg-emerald-600 text-white p-2 rounded-full font-bold text-xl w-10 h-10 flex items-center justify-center shadow-sm">A</div>
             <span class="text-2xl font-black text-emerald-600 tracking-tight hidden sm:inline">Arab Book</span>
         </div>
         
+        <!-- Search Engine Mechanics -->
         <div class="relative w-1/3">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </span>
-            <input type="text" id="userSearch" onkeyup="searchUsers()" placeholder="Search Arab Book (e.g., Tariq, Layla)..." class="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+            <input type="text" id="userSearch" onkeyup="searchUsers()" placeholder="Search names or usernames..." class="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+            <!-- Dropdown Results Box -->
             <div id="searchResults" class="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-200 hidden max-h-60 overflow-y-auto z-50"></div>
         </div>
 
         <div class="flex items-center space-x-4">
-            <button onclick="switchTab('feed')" class="p-2 hover:bg-gray-100 rounded-full text-xl text-gray-600 relative" title="Home Feed">
+            <button onclick="switchTab('feed')" class="p-2 hover:bg-gray-100 rounded-full text-xl text-gray-600" title="Home Feed">
                 <i class="fa-solid fa-house"></i>
             </button>
-            <button onclick="switchTab('messages')" class="p-2 hover:bg-gray-100 rounded-full text-xl text-gray-600 relative" title="Messages">
+            <button onclick="switchTab('messages')" class="p-2 hover:bg-gray-100 rounded-full text-xl text-gray-600" title="Direct Messages">
                 <i class="fa-solid fa-message"></i>
-                <span id="msgBadge" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center hidden">1</span>
             </button>
             <div onclick="switchTab('profile')" class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-gray-100 rounded-full">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-8 h-8 rounded-full object-cover" alt="My Profile">
-                <span class="font-semibold text-sm hidden md:inline" id="navProfileName">Layla Mansour</span>
+                <img id="navAvatar" src="" class="w-8 h-8 rounded-full object-cover">
+                <span id="navProfileName" class="font-semibold text-sm hidden md:inline">Loading...</span>
             </div>
         </div>
     </nav>
 
+    <!-- MAIN APP WRAPPER -->
     <div class="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-4 gap-6">
         
+        <!-- LEFT CONTROL BOARD & GROUPS -->
         <aside class="hidden md:block col-span-1 space-y-6">
-            <div class="bg-white p-4 rounded-xl shadow-sm">
+            <!-- ACTIVE USER PROFILE CARD -->
+            <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
                 <div onclick="switchTab('profile')" class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-10 h-10 rounded-full object-cover">
+                    <img id="sidebarAvatar" src="" class="w-10 h-10 rounded-full object-cover">
                     <div>
-                        <p class="font-bold text-sm" id="sidebarProfileName">Layla Mansour</p>
-                        <p class="text-xs text-gray-500">My Profile</p>
+                        <p id="sidebarProfileName" class="font-bold text-sm">Loading...</p>
+                        <p id="sidebarHandleName" class="text-xs text-gray-400">@username</p>
                     </div>
                 </div>
-                <hr class="my-3 border-gray-100">
-                <nav class="space-y-1">
-                    <button onclick="switchTab('feed')" class="w-full flex items-center space-x-3 p-2 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-medium transition text-sm text-gray-700">
-                        <i class="fa-solid fa-newspaper text-emerald-500 text-lg"></i> <span>Feed</span>
-                    </button>
-                    <button onclick="switchTab('messages')" class="w-full flex items-center space-x-3 p-2 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-medium transition text-sm text-gray-700">
-                        <i class="fa-solid fa-comment-dots text-teal-500 text-lg"></i> <span>Direct Messages</span>
-                    </button>
-                </nav>
+                <hr class="border-gray-100">
+                
+                <!-- ADVANCED ACCOUNT SIMULATOR SWITCHER -->
+                <div class="bg-emerald-50/50 p-3 rounded-xl border border-emerald-100 space-y-2">
+                    <p class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider"><i class="fa-solid fa-users-gear mr-1"></i> Account Simulation Hub</p>
+                    <p class="text-[11px] text-gray-500 leading-tight">Type any username to quickly log into or auto-create another person's profile instantly.</p>
+                    <div class="flex space-x-1">
+                        <input type="text" id="switchUsernameInput" placeholder="Enter username..." class="w-full px-2 py-1 bg-white text-xs border rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                        <button onclick="quickSwitchUser()" class="bg-emerald-600 text-white px-2 py-1 rounded-md text-xs font-bold hover:bg-emerald-700 transition">Switch</button>
+                    </div>
+                    <div class="pt-1 flex flex-wrap gap-1" id="quickSelectUsersContainer">
+                        <!-- Dynamic list of accounts created so far -->
+                    </div>
+                </div>
             </div>
 
+            <!-- COMMUNITY HUBS -->
             <div class="bg-white p-4 rounded-xl shadow-sm">
-                <h3 class="font-bold text-gray-700 mb-3 flex justify-between items-center">
+                <h3 class="font-bold text-gray-700 text-sm mb-3 flex justify-between items-center">
                     <span>Arab Communities</span>
                     <i class="fa-solid fa-users text-gray-400"></i>
                 </h3>
-                <div id="groupsList" class="space-y-2">
-                    </div>
+                <div id="groupsList" class="space-y-2"></div>
             </div>
         </aside>
 
+        <!-- CENTER TIMELINE FEED -->
         <main class="col-span-1 md:col-span-2 space-y-6">
             
+            <!-- FEED TAB -->
             <section id="feedTab" class="space-y-6">
+                <!-- Create Post Box -->
                 <div class="bg-white p-4 rounded-xl shadow-sm">
                     <div class="flex space-x-3">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-10 h-10 rounded-full object-cover">
-                        <textarea id="postInput" placeholder="What is happening around the Arab world today, Layla?" class="w-full bg-gray-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none h-20"></textarea>
+                        <img id="feedBoxAvatar" src="" class="w-10 h-10 rounded-full object-cover">
+                        <textarea id="postInput" placeholder="What is happening around the Arab world today?" class="w-full bg-gray-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none h-20"></textarea>
                     </div>
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-100">
-                        <span id="groupContextTag" class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md font-medium hidden">Posting to Group</span>
-                        <div class="flex space-x-2">
-                            <button onclick="clearGroupContext()" id="clearGroupBtn" class="hidden text-xs text-red-500 hover:underline">Cancel Community Post</button>
-                        </div>
-                        <button onclick="createNewPost()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-1.5 rounded-full text-sm shadow transition">Share Post</button>
+                        <span id="groupContextTag" class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md font-medium hidden"></span>
+                        <button onclick="clearGroupContext()" id="clearGroupBtn" class="hidden text-xs text-red-500 hover:underline">Cancel Community Post</button>
+                        <button onclick="createNewPost()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-1.5 rounded-full text-sm shadow transition ml-auto">Share Post</button>
                     </div>
                 </div>
 
-                <div id="postsFeed" class="space-y-4">
-                    </div>
+                <!-- Live Post Feeds -->
+                <div id="postsFeed" class="space-y-4"></div>
             </section>
 
+            <!-- PROFILE VIEW TAB -->
             <section id="profileTab" class="bg-white rounded-xl shadow-sm overflow-hidden hidden">
-                <div class="h-32 bg-gradient-to-r from-emerald-500 to-teal-600 relative"></div>
+                <div class="h-32 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
                 <div class="px-6 pb-6 relative">
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between -mt-16 mb-4 sm:space-x-4">
-                        <img id="profileViewAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-28 h-28 rounded-full border-4 border-white object-cover shadow-md bg-white">
+                        <img id="profileViewAvatar" src="" class="w-28 h-28 rounded-full border-4 border-white object-cover shadow-md bg-white">
                         <div class="mt-4 sm:mt-0 flex-1">
-                            <h2 id="profileViewName" class="text-2xl font-black">Layla Mansour</h2>
-                            <p id="profileViewHandle" class="text-gray-500 text-sm">@laylamansour</p>
+                            <h2 id="profileViewName" class="text-2xl font-black text-gray-800">Name</h2>
+                            <p id="profileViewHandle" class="text-gray-500 text-sm">@handle</p>
                         </div>
-                        <div id="profileActionArea" class="mt-4 sm:mt-0">
-                            </div>
+                        <div id="profileActionArea" class="mt-4 sm:mt-0"></div>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 py-3 border-y border-gray-100 text-center my-4">
-                        <div><p id="profileFriendsCount" class="font-bold text-lg text-gray-800">42</p><p class="text-xs text-gray-500 tracking-wide uppercase">Friends</p></div>
-                        <div><p id="profilePostsCount" class="font-bold text-lg text-gray-800">4</p><p class="text-xs text-gray-500 tracking-wide uppercase">Posts</p></div>
-                        <div><p class="font-bold text-lg text-gray-800">5</p><p class="text-xs text-gray-500 tracking-wide uppercase">Hubs</p></div>
+                    <div class="grid grid-cols-2 gap-2 py-3 border-y border-gray-100 text-center my-4">
+                        <div><p id="profileFriendsCount" class="font-bold text-lg text-gray-800">0</p><p class="text-xs text-gray-400 tracking-wide uppercase">Connections</p></div>
+                        <div><p id="profilePostsCount" class="font-bold text-lg text-gray-800">0</p><p class="text-xs text-gray-400 tracking-wide uppercase">Posts Created</p></div>
                     </div>
-                    <h3 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-images mr-1"></i> Timeline Activity</h3>
+                    <h3 class="font-bold text-gray-700 mb-3 text-sm"><i class="fa-solid fa-timeline mr-1"></i> Timeline Activity</h3>
                     <div id="profilePostsFeed" class="space-y-4"></div>
                 </div>
             </section>
 
-            <section id="messagesTab" class="bg-white rounded-xl shadow-sm grid grid-cols-3 h-[600px] overflow-hidden hidden">
+            <!-- MESSAGES TAB -->
+            <section id="messagesTab" class="bg-white rounded-xl shadow-sm grid grid-cols-3 h-[550px] overflow-hidden hidden">
+                <!-- Sidebar contacts -->
                 <div class="col-span-1 border-r border-gray-200 flex flex-col">
-                    <div class="p-3 font-bold text-lg border-b border-gray-100">Conversations</div>
-                    <div id="dmUserList" class="flex-1 overflow-y-auto divide-y divide-gray-50">
-                        </div>
+                    <div class="p-3 font-bold text-sm border-b border-gray-100 text-gray-700">Inbox Network</div>
+                    <div id="dmUserList" class="flex-1 overflow-y-auto divide-y divide-gray-50"></div>
                 </div>
+                <!-- Interactive active chat window -->
                 <div class="col-span-2 flex flex-col bg-gray-50">
-                    <div id="chatHeader" class="p-3 bg-white border-b border-gray-200 font-bold flex items-center space-x-2">
-                        <span class="text-gray-400 text-sm">Select a contact to begin messaging</span>
+                    <div id="chatHeader" class="p-3 bg-white border-b border-gray-200 font-bold text-sm flex items-center space-x-2">
+                        <span class="text-gray-400 text-xs">Select a contact to message</span>
                     </div>
-                    <div id="chatMessagesWindow" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col justify-end">
-                        <div class="text-center text-gray-400 text-sm my-auto">No active conversation logs</div>
-                    </div>
+                    <div id="chatMessagesWindow" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col justify-end"></div>
                     <div id="chatInputArea" class="p-3 bg-white border-t border-gray-200 flex items-center space-x-2 hidden">
-                        <input type="text" id="chatMessageInput" placeholder="Write an encrypted message..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        <button onclick="sendDirectMessage()" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-2 w-9 h-9 flex items-center justify-center transition shadow">
-                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                        <input type="text" id="chatMessageInput" placeholder="Type a message..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <button onclick="sendDirectMessage()" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-2 w-8 h-8 flex items-center justify-center transition shadow shadow-emerald-200">
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
                         </button>
                     </div>
                 </div>
@@ -141,245 +183,411 @@
 
         </main>
 
+        <!-- RIGHT SIDEBAR: INCOMING REQUESTS -->
         <aside class="col-span-1 space-y-6">
             <div class="bg-white p-4 rounded-xl shadow-sm">
-                <h3 class="font-bold text-gray-700 mb-3 flex justify-between items-center">
-                    <span>Friend Requests</span>
-                    <span id="requestCountBadge" class="bg-emerald-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">1</span>
+                <h3 class="font-bold text-gray-700 text-sm mb-3 flex justify-between items-center">
+                    <span>Friend Invitations</span>
+                    <span id="requestCountBadge" class="bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
                 </h3>
-                <div id="friendRequestsContainer" class="space-y-3">
-                    </div>
-            </div>
-            
-            <div class="bg-white p-4 rounded-xl shadow-sm text-xs text-gray-400 space-y-1">
-                <p>&copy; 2026 Arab Book Platform Engine. Built and configured for GitHub deployment.</p>
+                <div id="friendRequestsContainer" class="space-y-3"></div>
             </div>
         </aside>
 
     </div>
 
+    <!-- MAIN SCRIPT ENGINE -->
     <script>
-        // --- DATA LAYER SETUP ---
-        const CURRENT_USER = { id: 'user_me', name: 'Layla Mansour', handle: 'laylamansour', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', friends: ['user_2'] };
-        
-        let database = {
-            users: [
-                { id: 'user_1', name: 'Tariq Al-Zahrani', handle: 'tariq_z', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', friends: [] },
-                { id: 'user_2', name: 'Fatima Al-Hassan', handle: 'fatima_h', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', friends: ['user_me'] },
-                { id: 'user_3', name: 'Rami Haddad', handle: 'ramihaddad', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', friends: [] }
-            ],
+        // --- CENTRAL MEMORY CACHE ARCHITECTURE ---
+        let db = {
+            activeUserId: null,
+            users: {
+                "tariq_z": { id: "tariq_z", name: "Tariq Al-Zahrani", handle: "tariq_z", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150", friends: ["fatima_h"] },
+                "fatima_h": { id: "fatima_h", name: "Fatima Al-Hassan", handle: "fatima_h", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150", friends: ["tariq_z"] }
+            },
             posts: [
-                { id: 'post_1', userId: 'user_2', authorName: 'Fatima Al-Hassan', authorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', content: 'Salam everyone! Welcome to the grand opening of Arab Book. Let us build an incredible network together! 🌟', timestamp: '2 hours ago', group: null, likes: 24 },
-                { id: 'post_2', userId: 'user_1', authorName: 'Tariq Al-Zahrani', authorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', content: 'Stunning photos taken in ancient Petra, Jordan this afternoon. Pure architectural mastery.', timestamp: '5 hours ago', group: 'Arab History & Travel', likes: 56 }
+                { id: 'p1', userId: 'tariq_z', authorName: 'Tariq Al-Zahrani', authorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', content: 'Welcome to Arab Book! Create an account or switch profiles on the left sidebar menu to simulate real multi-user mechanics instantly! 🚀', timestamp: '1 hour ago', group: null, likes: 12 }
             ],
-            friendRequests: [
-                { fromId: 'user_3', fromName: 'Rami Haddad', fromAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' }
-            ],
+            friendRequests: [],
             groups: [
-                { id: 'g1', name: 'Tech Entrepreneurs Arab', members: 412, joined: true },
-                { id: 'g2', name: 'Arab History & Travel', members: 890, joined: false },
-                { id: 'g3', name: 'Arabic Calligraphy Artists', members: 154, joined: true }
+                { id: 'g1', name: 'Tech Entrepreneurs Arab', members: 142, joined: true },
+                { id: 'g2', name: 'Arab History & Travel', members: 389, joined: false }
             ],
-            messages: [
-                { senderId: 'user_2', recipientId: 'user_me', text: 'Hey Layla! Welcome to Arab Book! Let me know what you think of the portal.', timestamp: 'Yesterday' }
-            ]
+            messages: []
         };
 
-        // Initialize Local Storage Support
-        if (!localStorage.getItem('arabbook_db')) {
-            localStorage.setItem('arabbook_db', JSON.stringify(database));
+        // LocalStorage Synchronization Hooks
+        if (!localStorage.getItem('arabbook_v2')) {
+            localStorage.setItem('arabbook_v2', JSON.stringify(db));
         } else {
-            database = JSON.parse(localStorage.getItem('arabbook_db'));
+            db = JSON.parse(localStorage.getItem('arabbook_v2'));
         }
 
-        function saveState() {
-            localStorage.setItem('arabbook_db', JSON.stringify(database));
+        function save() {
+            localStorage.setItem('arabbook_v2', JSON.stringify(db));
         }
 
         let currentActiveGroupFilter = null;
         let activeChatUserId = null;
-        let activeProfileViewId = 'user_me';
+        let activeProfileViewId = null;
 
-        // --- APP ENGINE INITIALIZATION ---
+        // --- APP ENGINE INITIALIZE ---
         window.onload = function() {
+            if (!db.activeUserId) {
+                document.getElementById('authModal').classList.remove('hidden');
+            } else {
+                initAppDashboard();
+            }
+        };
+
+        function executeRegistration() {
+            const name = document.getElementById('regName').value.trim();
+            const handle = document.getElementById('regHandle').value.toLowerCase().replace(/[^a-z0-9_]/g, '').trim();
+            const avatar = document.getElementById('regAvatar').value;
+
+            if(!name || !handle) return alert('Fill out all parameters to compile account!');
+            if(db.users[handle]) return alert('Username already claimed. Pick another!');
+
+            db.users[handle] = { id: handle, name: name, handle: handle, avatar: avatar, friends: [] };
+            db.activeUserId = handle;
+            save();
+
+            document.getElementById('authModal').classList.add('hidden');
+            initAppDashboard();
+        }
+
+        function initAppDashboard() {
+            const user = db.users[db.activeUserId];
+            activeProfileViewId = user.id;
+
+            document.getElementById('navAvatar').src = user.avatar;
+            document.getElementById('sidebarAvatar').src = user.avatar;
+            document.getElementById('feedBoxAvatar').src = user.avatar;
+            document.getElementById('navProfileName').innerText = user.name;
+            document.getElementById('sidebarProfileName').innerText = user.name;
+            document.getElementById('sidebarHandleName').innerText = `@${user.handle}`;
+
             renderFeed();
             renderGroupsList();
             renderFriendRequests();
             renderDMUserList();
-            updateUINames();
-        };
-
-        function updateUINames() {
-            document.getElementById('navProfileName').innerText = CURRENT_USER.name;
-            document.getElementById('sidebarProfileName').innerText = CURRENT_USER.name;
+            renderQuickSwitcherLinks();
         }
 
-        function switchTab(tabId) {
-            document.getElementById('feedTab').classList.add('hidden');
-            document.getElementById('profileTab').classList.add('hidden');
-            document.getElementById('messagesTab').classList.add('hidden');
+        // --- ACCOUNT HUB MANAGEMENT ENGINE ---
+        function quickSwitchUser() {
+            const handle = document.getElementById('switchUsernameInput').value.toLowerCase().trim();
+            if(!handle) return;
 
-            if (tabId === 'feed') {
-                document.getElementById('feedTab').classList.remove('hidden');
-            } else if (tabId === 'profile') {
-                activeProfileViewId = 'user_me';
-                renderProfilePage();
-                document.getElementById('profileTab').classList.remove('hidden');
-            } else if (tabId === 'messages') {
-                renderDMUserList();
-                document.getElementById('messagesTab').classList.remove('hidden');
+            if(!db.users[handle]) {
+                // Auto-generate profile layout if username completely new to eliminate friction
+                db.users[handle] = {
+                    id: handle,
+                    name: handle.charAt(0).toUpperCase() + handle.slice(1) + " (Guest)",
+                    handle: handle,
+                    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+                    friends: []
+                };
             }
+
+            db.activeUserId = handle;
+            save();
+            document.getElementById('switchUsernameInput').value = '';
+            activeChatUserId = null;
+            initAppDashboard();
+            switchTab('feed');
         }
 
-        // --- SEARCH ENGINE MECHANICS ---
+        function forceSwitchTo(handle) {
+            db.activeUserId = handle;
+            save();
+            activeChatUserId = null;
+            initAppDashboard();
+            switchTab('feed');
+        }
+
+        function renderQuickSwitcherLinks() {
+            const container = document.getElementById('quickSelectUsersContainer');
+            container.innerHTML = '';
+            Object.keys(db.users).forEach(key => {
+                const u = db.users[key];
+                const btn = document.createElement('button');
+                btn.className = `text-[10px] px-2 py-0.5 rounded border transition ${u.id === db.activeUserId ? 'bg-emerald-600 text-white border-emerald-600 font-bold' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'}`;
+                btn.innerText = `@${u.handle}`;
+                btn.onclick = () => forceSwitchTo(u.id);
+                container.appendChild(btn);
+            });
+        }
+
+        // --- GLOBAL SEARCH ARCHITECTURE ---
         function searchUsers() {
             const query = document.getElementById('userSearch').value.toLowerCase().trim();
-            const resultsContainer = document.getElementById('searchResults');
-            
-            if (!query) {
-                resultsContainer.classList.add('hidden');
-                return;
-            }
+            const res = document.getElementById('searchResults');
+            if(!query) return res.classList.add('hidden');
 
-            resultsContainer.innerHTML = '';
-            resultsContainer.classList.remove('hidden');
+            res.innerHTML = '';
+            res.classList.remove('hidden');
 
-            const allUsers = [...database.users, { id: 'user_me', name: CURRENT_USER.name, handle: CURRENT_USER.handle, avatar: CURRENT_USER.avatar }];
-            const matched = allUsers.filter(u => u.name.toLowerCase().includes(query) || u.handle.toLowerCase().includes(query));
+            const matched = Object.values(db.users).filter(u => u.name.toLowerCase().includes(query) || u.handle.toLowerCase().includes(query));
 
-            if (matched.length === 0) {
-                resultsContainer.innerHTML = `<div class="p-3 text-sm text-gray-500 text-center">No profiles found for "${query}"</div>`;
+            if(matched.length === 0) {
+                res.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">No structural user found.</div>`;
                 return;
             }
 
             matched.forEach(user => {
-                const item = document.createElement('div');
-                item.className = "flex items-center justify-between p-3 hover:bg-gray-50 cursor-pointer transition";
-                item.onclick = () => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-2.5 hover:bg-gray-50 cursor-pointer text-xs";
+                div.onclick = () => {
                     activeProfileViewId = user.id;
                     renderProfilePage();
-                    document.getElementById('feedTab').classList.add('hidden');
-                    document.getElementById('messagesTab').classList.add('hidden');
-                    document.getElementById('profileTab').classList.remove('hidden');
-                    resultsContainer.classList.add('hidden');
+                    switchTab('profile');
+                    res.classList.add('hidden');
                     document.getElementById('userSearch').value = '';
                 };
-                item.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <img src="${user.avatar}" class="w-8 h-8 rounded-full object-cover">
-                        <div>
-                            <p class="text-sm font-bold text-gray-800">${user.name}</p>
-                            <p class="text-xs text-gray-500">@${user.handle}</p>
-                        </div>
+                div.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <img src="${user.avatar}" class="w-7 h-7 rounded-full object-cover">
+                        <div><p class="font-bold">${user.name}</p><p class="text-[10px] text-gray-400">@${user.handle}</p></div>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-emerald-500 text-xs"></i>
                 `;
-                resultsContainer.appendChild(item);
+                res.appendChild(div);
             });
         }
 
-        // --- POST FEED CREATION AND LIKES ---
+        // --- POST FEED MANAGEMENT ENGINE ---
         function createNewPost() {
-            const content = document.getElementById('postInput').value.trim();
-            if (!content) return;
+            const txt = document.getElementById('postInput').value.trim();
+            if(!txt) return;
 
+            const me = db.users[db.activeUserId];
             const newPost = {
                 id: 'post_' + Date.now(),
-                userId: CURRENT_USER.id,
-                authorName: CURRENT_USER.name,
-                authorAvatar: CURRENT_USER.avatar,
-                content: content,
+                userId: me.id,
+                authorName: me.name,
+                authorAvatar: me.avatar,
+                content: txt,
                 timestamp: 'Just now',
                 group: currentActiveGroupFilter,
                 likes: 0
             };
 
-            database.posts.unshift(newPost);
-            saveState();
+            db.posts.unshift(newPost);
+            save();
             document.getElementById('postInput').value = '';
             renderFeed();
         }
 
         function renderFeed() {
-            const feedContainer = document.getElementById('postsFeed');
-            feedContainer.innerHTML = '';
+            const target = document.getElementById('postsFeed');
+            target.innerHTML = '';
 
-            let filteredPosts = database.posts;
-            if (currentActiveGroupFilter) {
-                filteredPosts = database.posts.filter(p => p.group === currentActiveGroupFilter);
-            }
+            let subset = db.posts;
+            if(currentActiveGroupFilter) subset = db.posts.filter(p => p.group === currentActiveGroupFilter);
 
-            if (filteredPosts.length === 0) {
-                feedContainer.innerHTML = `<div class="bg-white p-6 rounded-xl shadow-sm text-center text-gray-500 text-sm">No updates in this category yet.</div>`;
+            if(subset.length === 0) {
+                target.innerHTML = `<div class="bg-white p-6 rounded-xl text-center text-xs text-gray-400">No updates logged here yet.</div>`;
                 return;
             }
 
-            filteredPosts.forEach(post => {
+            subset.forEach(p => {
                 const card = document.createElement('div');
-                card.className = "bg-white p-4 rounded-xl shadow-sm space-y-3 border border-gray-100";
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-3";
                 card.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3 cursor-pointer" onclick="activeProfileViewId='${post.userId}'; renderProfilePage(); switchTab('profile');">
-                            <img src="${post.authorAvatar}" class="w-10 h-10 rounded-full object-cover">
-                            <div>
-                                <div class="flex items-center space-x-1">
-                                    <span class="font-bold text-sm hover:underline text-gray-800">${post.authorName}</span>
-                                    ${post.group ? `<span class="text-xs text-gray-400 font-normal">in</span> <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">${post.group}</span>` : ''}
-                                </div>
-                                <p class="text-xs text-gray-400">${post.timestamp}</p>
-                            </div>
+                    <div class="flex items-center space-x-3 cursor-pointer" onclick="activeProfileViewId='${p.userId}'; renderProfilePage(); switchTab('profile');">
+                        <img src="${p.authorAvatar}" class="w-9 h-9 rounded-full object-cover">
+                        <div>
+                            <p class="text-xs font-bold text-gray-800">${p.authorName} ${p.group ? `<span class="font-normal text-gray-400">in</span> <span class="text-emerald-600 bg-emerald-50 px-1 rounded text-[10px]">${p.group}</span>` : ''}</p>
+                            <p class="text-[10px] text-gray-400">${p.timestamp}</p>
                         </div>
                     </div>
-                    <p class="text-sm whitespace-pre-wrap leading-relaxed text-gray-800">${post.content}</p>
-                    <div class="flex items-center pt-2 border-t border-gray-50 text-gray-500 text-xs font-semibold">
-                        <button onclick="likePost('${post.id}')" class="flex items-center space-x-2 hover:bg-gray-100 px-3 py-1.5 rounded-lg transition text-red-500">
-                            <i class="fa-solid fa-heart"></i>
-                            <span>${post.likes} Upvotes</span>
-                        </button>
+                    <p class="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">${p.content}</p>
+                    <div class="pt-2 border-t border-gray-50 flex">
+                        <button onclick="likePost('${p.id}')" class="text-[11px] font-bold text-red-500 hover:bg-red-50 px-2 py-1 rounded transition"><i class="fa-solid fa-heart mr-1"></i> ${p.likes} Upvotes</button>
                     </div>
                 `;
-                feedContainer.appendChild(card);
+                target.appendChild(card);
             });
         }
 
-        function likePost(postId) {
-            const target = database.posts.find(p => p.id === postId);
-            if (target) {
-                target.likes++;
-                saveState();
-                renderFeed();
-                if (!document.getElementById('profileTab').classList.contains('hidden')) {
-                    renderProfilePage();
+        function likePost(id) {
+            const p = db.posts.find(post => post.id === id);
+            if(p) { p.likes++; save(); renderFeed(); }
+        }
+
+        // --- COMMUNICATIONS & CHAT RUNTIME ---
+        function renderDMUserList() {
+            const target = document.getElementById('dmUserList');
+            target.innerHTML = '';
+
+            const me = db.users[db.activeUserId];
+            // Allow messaging anyone to simplify testing configurations
+            const contacts = Object.values(db.users).filter(u => u.id !== me.id);
+
+            if(contacts.length === 0) {
+                target.innerHTML = `<p class="p-3 text-center text-[11px] text-gray-400">Create more profiles to chat.</p>`;
+                return;
+            }
+
+            contacts.forEach(c => {
+                const div = document.createElement('div');
+                div.className = `p-3 flex items-center space-x-2.5 cursor-pointer transition ${activeChatUserId === c.id ? 'bg-emerald-50 border-r-4 border-emerald-600' : 'hover:bg-gray-50'}`;
+                div.onclick = () => { activeChatUserId = c.id; renderDMUserList(); loadActiveConversation(); };
+                div.innerHTML = `
+                    <img src="${c.avatar}" class="w-8 h-8 rounded-full object-cover">
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-bold truncate text-gray-800">${c.name}</p>
+                        <p class="text-[10px] text-gray-400 truncate">@${c.handle}</p>
+                    </div>
+                `;
+                target.appendChild(div);
+            });
+        }
+
+        function loadActiveConversation() {
+            const header = document.getElementById('chatHeader');
+            const windowMsg = document.getElementById('chatMessagesWindow');
+            const targetUser = db.users[activeChatUserId];
+
+            header.innerHTML = `
+                <img src="${targetUser.avatar}" class="w-7 h-7 rounded-full object-cover">
+                <div><p class="text-xs font-bold">${targetUser.name}</p><p class="text-[9px] text-emerald-500">Active Pipeline Node</p></div>
+            `;
+            document.getElementById('chatInputArea').classList.remove('hidden');
+
+            windowMsg.innerHTML = '';
+            const filtered = db.messages.filter(m => 
+                (m.from === db.activeUserId && m.to === activeChatUserId) || 
+                (m.from === activeChatUserId && m.to === db.activeUserId)
+            );
+
+            if(filtered.length === 0) {
+                windowMsg.innerHTML = `<p class="text-center text-[11px] text-gray-400 my-auto">No chat logs recorded. Write something below!</p>`;
+                return;
+            }
+
+            filtered.forEach(m => {
+                const isMe = m.from === db.activeUserId;
+                const wrapper = document.createElement('div');
+                wrapper.className = `flex ${isMe ? 'justify-end' : 'justify-start'}`;
+                wrapper.innerHTML = `
+                    <div class="${isMe ? 'bg-emerald-600 text-white rounded-br-none' : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'} max-w-xs px-3 py-1.5 rounded-xl text-xs shadow-sm">
+                        <p>${m.msg}</p>
+                    </div>
+                `;
+                windowMsg.appendChild(wrapper);
+            });
+            windowMsg.scrollTop = windowMsg.scrollHeight;
+        }
+
+        function sendDirectMessage() {
+            const input = document.getElementById('chatMessageInput');
+            const txt = input.value.trim();
+            if(!txt || !activeChatUserId) return;
+
+            db.messages.push({ from: db.activeUserId, to: activeChatUserId, msg: txt });
+            save();
+            input.value = '';
+            loadActiveConversation();
+        }
+
+        // --- FRIEND INTERACTION ARCHITECTURE ---
+        function renderFriendRequests() {
+            const target = document.getElementById('friendRequestsContainer');
+            const filtered = db.friendRequests.filter(r => r.toId === db.activeUserId);
+            document.getElementById('requestCountBadge').innerText = filtered.length;
+            target.innerHTML = '';
+
+            if(filtered.length === 0) {
+                target.innerHTML = `<p class="text-[11px] text-gray-400 text-center py-2">No incoming connections</p>`;
+                return;
+            }
+
+            filtered.forEach(r => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-2 bg-gray-50 border rounded-lg text-xs";
+                div.innerHTML = `
+                    <span><b>@${r.fromId}</b> sent an invite</span>
+                    <button onclick="approveFriend('${r.fromId}')" class="bg-emerald-600 text-white p-1 rounded font-bold text-[10px]"><i class="fa-solid fa-check"></i></button>
+                `;
+                target.appendChild(div);
+            });
+        }
+
+        function triggerFriendRequest(targetId) {
+            db.friendRequests.push({ fromId: db.activeUserId, toId: targetId });
+            save();
+            alert(`Invitation sent from @${db.activeUserId} to @${targetId}! Switch accounts to accept it.`);
+            renderProfilePage();
+        }
+
+        function approveFriend(senderId) {
+            db.users[db.activeUserId].friends.push(senderId);
+            db.users[senderId].friends.push(db.activeUserId);
+            db.friendRequests = db.friendRequests.filter(r => !(r.fromId === senderId && r.toId === db.activeUserId));
+            save();
+            renderFriendRequests();
+            renderProfilePage();
+        }
+
+        // --- USER PROFILE RENDERING ---
+        function renderProfilePage() {
+            const user = db.users[activeProfileViewId];
+            if(!user) return;
+
+            document.getElementById('profileViewAvatar').src = user.avatar;
+            document.getElementById('profileViewName').innerText = user.name;
+            document.getElementById('profileViewHandle').innerText = `@${user.handle}`;
+            document.getElementById('profileFriendsCount').innerText = user.friends ? user.friends.length : 0;
+
+            const myPosts = db.posts.filter(p => p.userId === user.id);
+            document.getElementById('profilePostsCount').innerText = myPosts.length;
+
+            const action = document.getElementById('profileActionArea');
+            if(user.id === db.activeUserId) {
+                action.innerHTML = `<span class="bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full font-bold">This is You</span>`;
+            } else {
+                const isFriend = db.users[db.activeUserId].friends.includes(user.id);
+                if(isFriend) {
+                    action.innerHTML = `<span class="bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full font-bold">✓ Connected</span>`;
+                } else {
+                    action.innerHTML = `<button onclick="triggerFriendRequest('${user.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1 rounded-full transition shadow">Connect</button>`;
                 }
+            }
+
+            const feed = document.getElementById('profilePostsFeed');
+            feed.innerHTML = '';
+            if(myPosts.length === 0) {
+                feed.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">No recent updates.</p>`;
+            } else {
+                myPosts.forEach(p => {
+                    const block = document.createElement('div');
+                    block.className = "p-3 bg-gray-50 rounded-lg text-xs space-y-1 border";
+                    block.innerHTML = `<p class="text-[10px] text-gray-400">${p.timestamp}</p><p class="text-gray-700">${p.content}</p>`;
+                    feed.appendChild(block);
+                });
             }
         }
 
-        // --- GROUPS INTERACTION SYSTEM ---
+        // --- GROUPS LISTS LOGIC ---
         function renderGroupsList() {
             const list = document.getElementById('groupsList');
             list.innerHTML = '';
-            database.groups.forEach(group => {
+            db.groups.forEach(g => {
                 const div = document.createElement('div');
-                div.className = `flex justify-between items-center p-2 rounded-lg text-xs transition cursor-pointer ${currentActiveGroupFilter === group.name ? 'bg-emerald-100 text-emerald-700 font-bold' : 'hover:bg-gray-50'}`;
-                div.innerHTML = `
-                    <div onclick="selectGroupFilter('${group.name}')" class="flex-1">
-                        <p class="font-bold">${group.name}</p>
-                        <p class="text-gray-400 text-[10px]">${group.members} members</p>
-                    </div>
-                    <button onclick="toggleJoinGroup('${group.id}', event)" class="px-2 py-0.5 font-semibold rounded text-[10px] shadow-sm ${group.joined ? 'bg-gray-200 text-gray-600' : 'bg-emerald-600 text-white'}">
-                        ${group.joined ? 'Joined' : 'Join'}
-                    </button>
-                `;
+                div.className = `p-2 rounded-lg text-xs cursor-pointer transition ${currentActiveGroupFilter === g.name ? 'bg-emerald-100 text-emerald-800 font-bold' : 'hover:bg-gray-50'}`;
+                div.onclick = () => selectGroup(g.name);
+                div.innerHTML = `<p class="font-bold">${g.name}</p><p class="text-[10px] text-gray-400">${g.members} members</p>`;
                 list.appendChild(div);
             });
         }
 
-        function selectGroupFilter(groupName) {
-            if (currentActiveGroupFilter === groupName) {
+        function selectGroup(name) {
+            if(currentActiveGroupFilter === name) {
                 clearGroupContext();
             } else {
-                currentActiveGroupFilter = groupName;
-                document.getElementById('groupContextTag').innerText = `Posting to: ${groupName}`;
+                currentActiveGroupFilter = name;
+                document.getElementById('groupContextTag').innerText = `Community Context: ${name}`;
                 document.getElementById('groupContextTag').classList.remove('hidden');
                 document.getElementById('clearGroupBtn').classList.remove('hidden');
                 renderGroupsList();
@@ -395,204 +603,15 @@
             renderFeed();
         }
 
-        function toggleJoinGroup(id, e) {
-            e.stopPropagation();
-            const group = database.groups.find(g => g.id === id);
-            if (group) {
-                group.joined = !group.joined;
-                group.members += group.joined ? 1 : -1;
-                saveState();
-                renderGroupsList();
-            }
-        }
+        // --- MAIN VIEW TAB MATRIX SWITCHER ---
+        function switchTab(tab) {
+            document.getElementById('feedTab').classList.add('hidden');
+            document.getElementById('profileTab').classList.add('hidden');
+            document.getElementById('messagesTab').classList.add('hidden');
 
-        // --- FRIEND REQUEST MECHANICAL OPERATIONS ---
-        function renderFriendRequests() {
-            const container = document.getElementById('friendRequestsContainer');
-            document.getElementById('requestCountBadge').innerText = database.friendRequests.length;
-            container.innerHTML = '';
-
-            if (database.friendRequests.length === 0) {
-                container.innerHTML = '<p class="text-xs text-gray-400 text-center py-2">No active invitations</p>';
-                return;
-            }
-
-            database.friendRequests.forEach(req => {
-                const item = document.createElement('div');
-                item.className = "flex items-center justify-between p-2 bg-gray-50 rounded-lg border border-gray-100";
-                item.innerHTML = `
-                    <div class="flex items-center space-x-2">
-                        <img src="${req.fromAvatar}" class="w-8 h-8 rounded-full object-cover">
-                        <span class="text-xs font-bold text-gray-700">${req.fromName}</span>
-                    </div>
-                    <div class="flex space-x-1">
-                        <button onclick="acceptFriend('${req.fromId}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] px-2 py-1 font-bold rounded shadow-sm"><i class="fa-solid fa-check"></i></button>
-                        <button onclick="rejectFriend('${req.fromId}')" class="bg-gray-200 hover:bg-gray-300 text-gray-600 text-[10px] px-2 py-1 font-bold rounded shadow-sm"><i class="fa-solid fa-xmark"></i></button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function acceptFriend(fromId) {
-            CURRENT_USER.friends.push(fromId);
-            const user = database.users.find(u => u.id === fromId);
-            if (user) user.friends.push('user_me');
-            
-            database.friendRequests = database.friendRequests.filter(r => r.fromId !== fromId);
-            saveState();
-            renderFriendRequests();
-            if (activeProfileViewId === 'user_me' || activeProfileViewId === fromId) renderProfilePage();
-        }
-
-        function rejectFriend(fromId) {
-            database.friendRequests = database.friendRequests.filter(r => r.fromId !== fromId);
-            saveState();
-            renderFriendRequests();
-        }
-
-        function sendFriendRequest(targetUserId) {
-            alert('Request transferred seamlessly over Arab Book core infrastructure.');
-            saveState();
-            renderProfilePage();
-        }
-
-        // --- PROFILE VIEWS RENDER LOGIC ---
-        function renderProfilePage() {
-            const isMe = activeProfileViewId === 'user_me';
-            let userObj = isMe ? CURRENT_USER : database.users.find(u => u.id === activeProfileViewId);
-
-            if (!userObj) return;
-
-            document.getElementById('profileViewAvatar').src = userObj.avatar;
-            document.getElementById('profileViewName').innerText = userObj.name;
-            document.getElementById('profileViewHandle').innerText = `@${userObj.handle}`;
-            
-            document.getElementById('profileFriendsCount').innerText = userObj.friends ? userObj.friends.length : 0;
-
-            const userPosts = database.posts.filter(p => p.userId === userObj.id);
-            document.getElementById('profilePostsCount').innerText = userPosts.length;
-
-            const actionArea = document.getElementById('profileActionArea');
-            if (isMe) {
-                actionArea.innerHTML = `<button class="bg-gray-200 text-gray-700 font-bold px-4 py-1.5 rounded-full text-xs">Edit Arab Book Profile</button>`;
-            } else {
-                const isFriend = CURRENT_USER.friends.includes(userObj.id);
-                if (isFriend) {
-                    actionArea.innerHTML = `<span class="bg-emerald-100 text-emerald-700 font-bold px-4 py-1.5 rounded-full text-xs flex items-center gap-1"><i class="fa-solid fa-user-check"></i> Connected</span>`;
-                } else {
-                    actionArea.innerHTML = `<button onclick="sendFriendRequest('${userObj.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-1.5 rounded-full text-xs transition shadow"><i class="fa-solid fa-user-plus mr-1"></i> Connect</button>`;
-                }
-            }
-
-            const container = document.getElementById('profilePostsFeed');
-            container.innerHTML = '';
-            if (userPosts.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 text-center py-6">No publications yet.</p>`;
-            } else {
-                userPosts.forEach(post => {
-                    const block = document.createElement('div');
-                    block.className = "p-3 bg-gray-50 border border-gray-100 rounded-lg text-sm";
-                    block.innerHTML = `
-                        <p class="text-xs text-gray-400 mb-1">${post.timestamp}</p>
-                        <p class="text-gray-800 mb-2">${post.content}</p>
-                        <div class="text-xs text-red-500 font-bold flex items-center gap-1">
-                            <i class="fa-solid fa-heart"></i> ${post.likes}
-                        </div>
-                    `;
-                    container.appendChild(block);
-                });
-            }
-        }
-
-        // --- CONVERSATIONS ENGINE (DMs) ---
-        function renderDMUserList() {
-            const list = document.getElementById('dmUserList');
-            list.innerHTML = '';
-
-            const chatableUsers = database.users.filter(u => CURRENT_USER.friends.includes(u.id));
-
-            if (chatableUsers.length === 0) {
-                list.innerHTML = '<p class="p-4 text-xs text-gray-400 text-center">Add connections to unlock secure chat</p>';
-                return;
-            }
-
-            chatableUsers.forEach(user => {
-                const row = document.createElement('div');
-                row.className = `p-3 flex items-center space-x-3 cursor-pointer transition ${activeChatUserId === user.id ? 'bg-emerald-50 border-r-4 border-emerald-600' : 'hover:bg-gray-50'}`;
-                row.onclick = () => selectActiveChatUser(user.id);
-                row.innerHTML = `
-                    <img src="${user.avatar}" class="w-9 h-9 rounded-full object-cover">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-xs font-bold truncate text-gray-800">${user.name}</p>
-                        <p class="text-[11px] text-gray-400 truncate">Tap to send message</p>
-                    </div>
-                `;
-                list.appendChild(row);
-            });
-        }
-
-        function selectActiveChatUser(userId) {
-            activeChatUserId = userId;
-            renderDMUserList();
-            
-            const user = database.users.find(u => u.id === userId);
-            document.getElementById('chatHeader').innerHTML = `
-                <img src="${user.avatar}" class="w-8 h-8 rounded-full object-cover">
-                <div>
-                    <p class="text-sm font-bold text-gray-800">${user.name}</p>
-                    <p class="text-[10px] text-emerald-500 font-semibold">● Secure Node Online</p>
-                </div>
-            `;
-            
-            document.getElementById('chatInputArea').classList.remove('hidden');
-            renderChatMessages();
-        }
-
-        function renderChatMessages() {
-            const target = document.getElementById('chatMessagesWindow');
-            target.innerHTML = '';
-
-            const convo = database.messages.filter(m => 
-                (m.senderId === CURRENT_USER.id && m.recipientId === activeChatUserId) ||
-                (m.senderId === activeChatUserId && m.recipientId === CURRENT_USER.id)
-            );
-
-            if (convo.length === 0) {
-                target.innerHTML = '<p class="text-center text-xs text-gray-400 my-auto">Start chatting safely on Arab Book.</p>';
-                return;
-            }
-
-            convo.forEach(m => {
-                const isMe = m.senderId === CURRENT_USER.id;
-                const outer = document.createElement('div');
-                outer.className = `flex ${isMe ? 'justify-end' : 'justify-start'}`;
-                outer.innerHTML = `
-                    <div class="${isMe ? 'bg-emerald-600 text-white rounded-br-none' : 'bg-white border border-gray-200 text-gray-800 rounded-bl-none'} rounded-2xl max-w-xs px-3 py-1.5 shadow-sm text-xs">
-                        <p>${m.text}</p>
-                    </div>
-                `;
-                target.appendChild(outer);
-            });
-            target.scrollTop = target.scrollHeight;
-        }
-
-        function sendDirectMessage() {
-            const input = document.getElementById('chatMessageInput');
-            const txt = input.value.trim();
-            if (!txt || !activeChatUserId) return;
-
-            const msg = {
-                senderId: CURRENT_USER.id,
-                recipientId: activeChatUserId,
-                text: txt,
-                timestamp: 'Just now'
-            };
-
-            database.messages.push(msg);
-            saveState();
-            input.value = '';
-            renderChatMessages();
+            if (tab === 'feed') document.getElementById('feedTab').classList.remove('hidden');
+            if (tab === 'profile') { renderProfilePage(); document.getElementById('profileTab').classList.remove('hidden'); }
+            if (tab === 'messages') { renderDMUserList(); document.getElementById('messagesTab').classList.remove('hidden'); }
         }
     </script>
 </body>
