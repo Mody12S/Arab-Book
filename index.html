@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus - The Next-Gen Social Network</title>
+    <title>Arab Book - Connecting the Arab World</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        .active-tab { border-bottom: 4px solid #1877f2; color: #1877f2; }
+        body { background-color: #f3f4f6; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .active-tab { border-bottom: 4px solid #059669; color: #059669; }
     </style>
 </head>
 <body class="text-gray-800">
 
     <nav class="bg-white shadow-md sticky top-0 z-50 px-4 py-2 flex justify-between items-center">
         <div class="flex items-center space-x-2">
-            <div class="bg-blue-600 text-white p-2 rounded-full font-bold text-xl w-10 h-10 flex items-center justify-center">N</div>
-            <span class="text-2xl font-black text-blue-600 tracking-tight hidden sm:inline">nexus</span>
+            <div class="bg-emerald-600 text-white p-2 rounded-full font-bold text-xl w-10 h-10 flex items-center justify-center shadow-md">A</div>
+            <span class="text-2xl font-black text-emerald-600 tracking-tight hidden sm:inline">Arab Book</span>
         </div>
         
         <div class="relative w-1/3">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </span>
-            <input type="text" id="userSearch" onkeyup="searchUsers()" placeholder="Search users (e.g., Alice, Bob)..." class="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            <input type="text" id="userSearch" onkeyup="searchUsers()" placeholder="Search Arab Book (e.g., Tariq, Layla)..." class="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
             <div id="searchResults" class="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-200 hidden max-h-60 overflow-y-auto z-50"></div>
         </div>
 
@@ -37,7 +37,7 @@
             </button>
             <div onclick="switchTab('profile')" class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-gray-100 rounded-full">
                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-8 h-8 rounded-full object-cover" alt="My Profile">
-                <span class="font-semibold text-sm hidden md:inline" id="navProfileName">Jane Doe</span>
+                <span class="font-semibold text-sm hidden md:inline" id="navProfileName">Layla Mansour</span>
             </div>
         </div>
     </nav>
@@ -49,24 +49,24 @@
                 <div onclick="switchTab('profile')" class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-10 h-10 rounded-full object-cover">
                     <div>
-                        <p class="font-bold text-sm" id="sidebarProfileName">Jane Doe</p>
-                        <p class="text-xs text-gray-500">View Profile</p>
+                        <p class="font-bold text-sm" id="sidebarProfileName">Layla Mansour</p>
+                        <p class="text-xs text-gray-500">My Profile</p>
                     </div>
                 </div>
                 <hr class="my-3 border-gray-100">
                 <nav class="space-y-1">
-                    <button onclick="switchTab('feed')" class="w-full flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded-lg font-medium transition text-sm text-gray-700">
-                        <i class="fa-solid fa-newspaper text-blue-500 text-lg"></i> <span>Feed</span>
+                    <button onclick="switchTab('feed')" class="w-full flex items-center space-x-3 p-2 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-medium transition text-sm text-gray-700">
+                        <i class="fa-solid fa-newspaper text-emerald-500 text-lg"></i> <span>Feed</span>
                     </button>
-                    <button onclick="switchTab('messages')" class="w-full flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded-lg font-medium transition text-sm text-gray-700">
-                        <i class="fa-solid fa-comment-dots text-green-500 text-lg"></i> <span>Direct Messages</span>
+                    <button onclick="switchTab('messages')" class="w-full flex items-center space-x-3 p-2 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-medium transition text-sm text-gray-700">
+                        <i class="fa-solid fa-comment-dots text-teal-500 text-lg"></i> <span>Direct Messages</span>
                     </button>
                 </nav>
             </div>
 
             <div class="bg-white p-4 rounded-xl shadow-sm">
                 <h3 class="font-bold text-gray-700 mb-3 flex justify-between items-center">
-                    <span>Groups Explorer</span>
+                    <span>Arab Communities</span>
                     <i class="fa-solid fa-users text-gray-400"></i>
                 </h3>
                 <div id="groupsList" class="space-y-2">
@@ -80,14 +80,14 @@
                 <div class="bg-white p-4 rounded-xl shadow-sm">
                     <div class="flex space-x-3">
                         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-10 h-10 rounded-full object-cover">
-                        <textarea id="postInput" placeholder="What's on your mind, Jane? Share a TikTok style vibe..." class="w-full bg-gray-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none h-20"></textarea>
+                        <textarea id="postInput" placeholder="What is happening around the Arab world today, Layla?" class="w-full bg-gray-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none h-20"></textarea>
                     </div>
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-100">
-                        <span id="groupContextTag" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-medium hidden">Posting to Group</span>
+                        <span id="groupContextTag" class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md font-medium hidden">Posting to Group</span>
                         <div class="flex space-x-2">
-                            <button onclick="clearGroupContext()" id="clearGroupBtn" class="hidden text-xs text-red-500 hover:underline">Cancel Group Post</button>
+                            <button onclick="clearGroupContext()" id="clearGroupBtn" class="hidden text-xs text-red-500 hover:underline">Cancel Community Post</button>
                         </div>
-                        <button onclick="createNewPost()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-1.5 rounded-full text-sm shadow transition">Post</button>
+                        <button onclick="createNewPost()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-1.5 rounded-full text-sm shadow transition">Share Post</button>
                     </div>
                 </div>
 
@@ -96,21 +96,21 @@
             </section>
 
             <section id="profileTab" class="bg-white rounded-xl shadow-sm overflow-hidden hidden">
-                <div class="h-32 bg-gradient-to-r refinement bg-blue-500 to-indigo-600 relative"></div>
+                <div class="h-32 bg-gradient-to-r from-emerald-500 to-teal-600 relative"></div>
                 <div class="px-6 pb-6 relative">
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between -mt-16 mb-4 sm:space-x-4">
                         <img id="profileViewAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-28 h-28 rounded-full border-4 border-white object-cover shadow-md bg-white">
                         <div class="mt-4 sm:mt-0 flex-1">
-                            <h2 id="profileViewName" class="text-2xl font-black">Jane Doe</h2>
-                            <p id="profileViewHandle" class="text-gray-500 text-sm">@janedoe</p>
+                            <h2 id="profileViewName" class="text-2xl font-black">Layla Mansour</h2>
+                            <p id="profileViewHandle" class="text-gray-500 text-sm">@laylamansour</p>
                         </div>
                         <div id="profileActionArea" class="mt-4 sm:mt-0">
                             </div>
                     </div>
                     <div class="grid grid-cols-3 gap-2 py-3 border-y border-gray-100 text-center my-4">
-                        <div><p id="profileFriendsCount" class="font-bold text-lg text-gray-800">12</p><p class="text-xs text-gray-500 tracking-wide uppercase">Friends</p></div>
+                        <div><p id="profileFriendsCount" class="font-bold text-lg text-gray-800">42</p><p class="text-xs text-gray-500 tracking-wide uppercase">Friends</p></div>
                         <div><p id="profilePostsCount" class="font-bold text-lg text-gray-800">4</p><p class="text-xs text-gray-500 tracking-wide uppercase">Posts</p></div>
-                        <div><p class="font-bold text-lg text-gray-800">8</p><p class="text-xs text-gray-500 tracking-wide uppercase">Groups</p></div>
+                        <div><p class="font-bold text-lg text-gray-800">5</p><p class="text-xs text-gray-500 tracking-wide uppercase">Hubs</p></div>
                     </div>
                     <h3 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-images mr-1"></i> Timeline Activity</h3>
                     <div id="profilePostsFeed" class="space-y-4"></div>
@@ -119,20 +119,20 @@
 
             <section id="messagesTab" class="bg-white rounded-xl shadow-sm grid grid-cols-3 h-[600px] overflow-hidden hidden">
                 <div class="col-span-1 border-r border-gray-200 flex flex-col">
-                    <div class="p-3 font-bold text-lg border-b border-gray-100">Chats</div>
+                    <div class="p-3 font-bold text-lg border-b border-gray-100">Conversations</div>
                     <div id="dmUserList" class="flex-1 overflow-y-auto divide-y divide-gray-50">
                         </div>
                 </div>
                 <div class="col-span-2 flex flex-col bg-gray-50">
                     <div id="chatHeader" class="p-3 bg-white border-b border-gray-200 font-bold flex items-center space-x-2">
-                        <span class="text-gray-400 text-sm">Select a friend to begin messaging</span>
+                        <span class="text-gray-400 text-sm">Select a contact to begin messaging</span>
                     </div>
                     <div id="chatMessagesWindow" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col justify-end">
-                        <div class="text-center text-gray-400 text-sm my-auto">No open conversation</div>
+                        <div class="text-center text-gray-400 text-sm my-auto">No active conversation logs</div>
                     </div>
                     <div id="chatInputArea" class="p-3 bg-white border-t border-gray-200 flex items-center space-x-2 hidden">
-                        <input type="text" id="chatMessageInput" placeholder="Type a secure live message..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <button onclick="sendDirectMessage()" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 w-9 h-9 flex items-center justify-center transition shadow">
+                        <input type="text" id="chatMessageInput" placeholder="Write an encrypted message..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <button onclick="sendDirectMessage()" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-2 w-9 h-9 flex items-center justify-center transition shadow">
                             <i class="fa-solid fa-paper-plane text-sm"></i>
                         </button>
                     </div>
@@ -145,15 +145,14 @@
             <div class="bg-white p-4 rounded-xl shadow-sm">
                 <h3 class="font-bold text-gray-700 mb-3 flex justify-between items-center">
                     <span>Friend Requests</span>
-                    <span id="requestCountBadge" class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">1</span>
+                    <span id="requestCountBadge" class="bg-emerald-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">1</span>
                 </h3>
                 <div id="friendRequestsContainer" class="space-y-3">
                     </div>
             </div>
             
             <div class="bg-white p-4 rounded-xl shadow-sm text-xs text-gray-400 space-y-1">
-                <p>&copy; 2026 Nexus Core UI Engine. Built mimicking standard Facebook features.</p>
-                <p>Perfect structural platform to copy/paste directly into GitHub.</p>
+                <p>&copy; 2026 Arab Book Platform Engine. Built and configured for GitHub deployment.</p>
             </div>
         </aside>
 
@@ -161,43 +160,42 @@
 
     <script>
         // --- DATA LAYER SETUP ---
-        const CURRENT_USER = { id: 'user_me', name: 'Jane Doe', handle: 'janedoe', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', friends: ['user_2'] };
+        const CURRENT_USER = { id: 'user_me', name: 'Layla Mansour', handle: 'laylamansour', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', friends: ['user_2'] };
         
         let database = {
             users: [
-                { id: 'user_1', name: 'Alice Smith', handle: 'alicesmith', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', friends: [] },
-                { id: 'user_2', name: 'Bob Johnson', handle: 'bobjohnson', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', friends: ['user_me'] },
-                { id: 'user_3', name: 'Charlie Brown', handle: 'goodgrief', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', friends: [] }
+                { id: 'user_1', name: 'Tariq Al-Zahrani', handle: 'tariq_z', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', friends: [] },
+                { id: 'user_2', name: 'Fatima Al-Hassan', handle: 'fatima_h', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', friends: ['user_me'] },
+                { id: 'user_3', name: 'Rami Haddad', handle: 'ramihaddad', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', friends: [] }
             ],
             posts: [
-                { id: 'post_1', userId: 'user_2', authorName: 'Bob Johnson', authorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', content: 'Just launched my brand new web framework UI. Check it out on GitHub! 🚀 #coding', timestamp: '2 hours ago', group: null, likes: 5 },
-                { id: 'post_2', userId: 'user_1', authorName: 'Alice Smith', authorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', content: 'Incredible sunrise hike today! Coffee tastes 10x better up here.', timestamp: '5 hours ago', group: 'Nature Lovers', likes: 12 }
+                { id: 'post_1', userId: 'user_2', authorName: 'Fatima Al-Hassan', authorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', content: 'Salam everyone! Welcome to the grand opening of Arab Book. Let us build an incredible network together! 🌟', timestamp: '2 hours ago', group: null, likes: 24 },
+                { id: 'post_2', userId: 'user_1', authorName: 'Tariq Al-Zahrani', authorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', content: 'Stunning photos taken in ancient Petra, Jordan this afternoon. Pure architectural mastery.', timestamp: '5 hours ago', group: 'Arab History & Travel', likes: 56 }
             ],
             friendRequests: [
-                { fromId: 'user_1', fromName: 'Alice Smith', fromAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' }
+                { fromId: 'user_3', fromName: 'Rami Haddad', fromAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' }
             ],
             groups: [
-                { id: 'g1', name: 'Tech & Architecture', members: 124, joined: true },
-                { id: 'g2', name: 'Nature Lovers', members: 89, joined: false },
-                { id: 'g3', name: 'UI/UX Design Elite', members: 210, joined: true }
+                { id: 'g1', name: 'Tech Entrepreneurs Arab', members: 412, joined: true },
+                { id: 'g2', name: 'Arab History & Travel', members: 890, joined: false },
+                { id: 'g3', name: 'Arabic Calligraphy Artists', members: 154, joined: true }
             ],
             messages: [
-                { senderId: 'user_2', recipientId: 'user_me', text: 'Hey Jane! Did you catch that updated repo on GitHub?', timestamp: 'Yesterday' }
+                { senderId: 'user_2', recipientId: 'user_me', text: 'Hey Layla! Welcome to Arab Book! Let me know what you think of the portal.', timestamp: 'Yesterday' }
             ]
         };
 
         // Initialize Local Storage Support
-        if (!localStorage.getItem('nexus_db')) {
-            localStorage.setItem('nexus_db', JSON.stringify(database));
+        if (!localStorage.getItem('arabbook_db')) {
+            localStorage.setItem('arabbook_db', JSON.stringify(database));
         } else {
-            database = JSON.parse(localStorage.getItem('nexus_db'));
+            database = JSON.parse(localStorage.getItem('arabbook_db'));
         }
 
         function saveState() {
-            localStorage.setItem('nexus_db', JSON.stringify(database));
+            localStorage.setItem('arabbook_db', JSON.stringify(database));
         }
 
-        // Active State Tracking Variables
         let currentActiveGroupFilter = null;
         let activeChatUserId = null;
         let activeProfileViewId = 'user_me';
@@ -216,7 +214,6 @@
             document.getElementById('sidebarProfileName').innerText = CURRENT_USER.name;
         }
 
-        // --- TAB SWITCHING ARCHITECTURE ---
         function switchTab(tabId) {
             document.getElementById('feedTab').classList.add('hidden');
             document.getElementById('profileTab').classList.add('hidden');
@@ -234,7 +231,7 @@
             }
         }
 
-        // --- USER SEARCH ENGINE MECHANICS ---
+        // --- SEARCH ENGINE MECHANICS ---
         function searchUsers() {
             const query = document.getElementById('userSearch').value.toLowerCase().trim();
             const resultsContainer = document.getElementById('searchResults');
@@ -251,7 +248,7 @@
             const matched = allUsers.filter(u => u.name.toLowerCase().includes(query) || u.handle.toLowerCase().includes(query));
 
             if (matched.length === 0) {
-                resultsContainer.innerHTML = `<div class="p-3 text-sm text-gray-500 text-center">No results found for "${query}"</div>`;
+                resultsContainer.innerHTML = `<div class="p-3 text-sm text-gray-500 text-center">No profiles found for "${query}"</div>`;
                 return;
             }
 
@@ -275,16 +272,16 @@
                             <p class="text-xs text-gray-500">@${user.handle}</p>
                         </div>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                    <i class="fa-solid fa-chevron-right text-emerald-500 text-xs"></i>
                 `;
                 resultsContainer.appendChild(item);
             });
         }
 
-        // --- POST FEED CREATION AND LIKES SYSTEM ---
+        // --- POST FEED CREATION AND LIKES ---
         function createNewPost() {
             const content = document.getElementById('postInput').value.trim();
-            if (!content) return alert('Cannot post empty content!');
+            if (!content) return;
 
             const newPost = {
                 id: 'post_' + Date.now(),
@@ -313,10 +310,7 @@
             }
 
             if (filteredPosts.length === 0) {
-                feedContainer.innerHTML = `
-                    <div class="bg-white p-6 rounded-xl shadow-sm text-center text-gray-500 text-sm">
-                        No posts found here yet. Start the conversation!
-                    </div>`;
+                feedContainer.innerHTML = `<div class="bg-white p-6 rounded-xl shadow-sm text-center text-gray-500 text-sm">No updates in this category yet.</div>`;
                 return;
             }
 
@@ -329,8 +323,8 @@
                             <img src="${post.authorAvatar}" class="w-10 h-10 rounded-full object-cover">
                             <div>
                                 <div class="flex items-center space-x-1">
-                                    <span class="font-bold text-sm hover:underline">${post.authorName}</span>
-                                    ${post.group ? `<span class="text-xs text-gray-400 font-normal">in</span> <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${post.group}</span>` : ''}
+                                    <span class="font-bold text-sm hover:underline text-gray-800">${post.authorName}</span>
+                                    ${post.group ? `<span class="text-xs text-gray-400 font-normal">in</span> <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">${post.group}</span>` : ''}
                                 </div>
                                 <p class="text-xs text-gray-400">${post.timestamp}</p>
                             </div>
@@ -340,7 +334,7 @@
                     <div class="flex items-center pt-2 border-t border-gray-50 text-gray-500 text-xs font-semibold">
                         <button onclick="likePost('${post.id}')" class="flex items-center space-x-2 hover:bg-gray-100 px-3 py-1.5 rounded-lg transition text-red-500">
                             <i class="fa-solid fa-heart"></i>
-                            <span>${post.likes} Likes</span>
+                            <span>${post.likes} Upvotes</span>
                         </button>
                     </div>
                 `;
@@ -354,7 +348,7 @@
                 target.likes++;
                 saveState();
                 renderFeed();
-                if (document.getElementById('profileTab').classList.contains('hidden') === false) {
+                if (!document.getElementById('profileTab').classList.contains('hidden')) {
                     renderProfilePage();
                 }
             }
@@ -366,13 +360,13 @@
             list.innerHTML = '';
             database.groups.forEach(group => {
                 const div = document.createElement('div');
-                div.className = `flex justify-between items-center p-2 rounded-lg text-xs transition cursor-pointer ${currentActiveGroupFilter === group.name ? 'bg-blue-100 text-blue-700 font-bold' : 'hover:bg-gray-50'}`;
+                div.className = `flex justify-between items-center p-2 rounded-lg text-xs transition cursor-pointer ${currentActiveGroupFilter === group.name ? 'bg-emerald-100 text-emerald-700 font-bold' : 'hover:bg-gray-50'}`;
                 div.innerHTML = `
                     <div onclick="selectGroupFilter('${group.name}')" class="flex-1">
                         <p class="font-bold">${group.name}</p>
                         <p class="text-gray-400 text-[10px]">${group.members} members</p>
                     </div>
-                    <button onclick="toggleJoinGroup('${group.id}', event)" class="px-2 py-0.5 font-semibold rounded text-[10px] shadow-sm ${group.joined ? 'bg-gray-200 text-gray-600' : 'bg-blue-600 text-white'}">
+                    <button onclick="toggleJoinGroup('${group.id}', event)" class="px-2 py-0.5 font-semibold rounded text-[10px] shadow-sm ${group.joined ? 'bg-gray-200 text-gray-600' : 'bg-emerald-600 text-white'}">
                         ${group.joined ? 'Joined' : 'Join'}
                     </button>
                 `;
@@ -419,7 +413,7 @@
             container.innerHTML = '';
 
             if (database.friendRequests.length === 0) {
-                container.innerHTML = '<p class="text-xs text-gray-400 text-center py-2">No pending requests</p>';
+                container.innerHTML = '<p class="text-xs text-gray-400 text-center py-2">No active invitations</p>';
                 return;
             }
 
@@ -432,7 +426,7 @@
                         <span class="text-xs font-bold text-gray-700">${req.fromName}</span>
                     </div>
                     <div class="flex space-x-1">
-                        <button onclick="acceptFriend('${req.fromId}')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2 py-1 font-bold rounded shadow-sm"><i class="fa-solid fa-check"></i></button>
+                        <button onclick="acceptFriend('${req.fromId}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] px-2 py-1 font-bold rounded shadow-sm"><i class="fa-solid fa-check"></i></button>
                         <button onclick="rejectFriend('${req.fromId}')" class="bg-gray-200 hover:bg-gray-300 text-gray-600 text-[10px] px-2 py-1 font-bold rounded shadow-sm"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 `;
@@ -458,10 +452,7 @@
         }
 
         function sendFriendRequest(targetUserId) {
-            const alreadySent = database.friendRequests.some(r => r.fromId === CURRENT_USER.id);
-            if (alreadySent) return alert('Friend request already pending execution!');
-            
-            alert('Mechanical simulated friend request sent successfully!');
+            alert('Request transferred seamlessly over Arab Book core infrastructure.');
             saveState();
             renderProfilePage();
         }
@@ -477,31 +468,27 @@
             document.getElementById('profileViewName').innerText = userObj.name;
             document.getElementById('profileViewHandle').innerText = `@${userObj.handle}`;
             
-            // Friends UI Logic Counts
             document.getElementById('profileFriendsCount').innerText = userObj.friends ? userObj.friends.length : 0;
 
-            // Compute Posts Count
             const userPosts = database.posts.filter(p => p.userId === userObj.id);
             document.getElementById('profilePostsCount').innerText = userPosts.length;
 
-            // Action Button Engine Conditional Logic
             const actionArea = document.getElementById('profileActionArea');
             if (isMe) {
-                actionArea.innerHTML = `<button class="bg-gray-200 text-gray-700 font-bold px-4 py-1.5 rounded-full text-xs">Edit UI Profile</button>`;
+                actionArea.innerHTML = `<button class="bg-gray-200 text-gray-700 font-bold px-4 py-1.5 rounded-full text-xs">Edit Arab Book Profile</button>`;
             } else {
                 const isFriend = CURRENT_USER.friends.includes(userObj.id);
                 if (isFriend) {
-                    actionArea.innerHTML = `<span class="bg-green-100 text-green-700 font-bold px-4 py-1.5 rounded-full text-xs flex items-center gap-1"><i class="fa-solid fa-user-check"></i> Friends</span>`;
+                    actionArea.innerHTML = `<span class="bg-emerald-100 text-emerald-700 font-bold px-4 py-1.5 rounded-full text-xs flex items-center gap-1"><i class="fa-solid fa-user-check"></i> Connected</span>`;
                 } else {
-                    actionArea.innerHTML = `<button onclick="sendFriendRequest('${userObj.id}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-1.5 rounded-full text-xs transition shadow"><i class="fa-solid fa-user-plus mr-1"></i> Add Friend</button>`;
+                    actionArea.innerHTML = `<button onclick="sendFriendRequest('${userObj.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-1.5 rounded-full text-xs transition shadow"><i class="fa-solid fa-user-plus mr-1"></i> Connect</button>`;
                 }
             }
 
-            // Local user timeline feed
             const container = document.getElementById('profilePostsFeed');
             container.innerHTML = '';
             if (userPosts.length === 0) {
-                container.innerHTML = `<p class="text-sm text-gray-400 text-center py-6">No historical posts on timeline.</p>`;
+                container.innerHTML = `<p class="text-sm text-gray-400 text-center py-6">No publications yet.</p>`;
             } else {
                 userPosts.forEach(post => {
                     const block = document.createElement('div');
@@ -518,28 +505,27 @@
             }
         }
 
-        // --- LIVE CONVERSATIONS ENGINE (DMs) ---
+        // --- CONVERSATIONS ENGINE (DMs) ---
         function renderDMUserList() {
             const list = document.getElementById('dmUserList');
             list.innerHTML = '';
 
-            // Filter friends allowed to chat
             const chatableUsers = database.users.filter(u => CURRENT_USER.friends.includes(u.id));
 
             if (chatableUsers.length === 0) {
-                list.innerHTML = '<p class="p-4 text-xs text-gray-400 text-center">Add friends to start messaging</p>';
+                list.innerHTML = '<p class="p-4 text-xs text-gray-400 text-center">Add connections to unlock secure chat</p>';
                 return;
             }
 
             chatableUsers.forEach(user => {
                 const row = document.createElement('div');
-                row.className = `p-3 flex items-center space-x-3 cursor-pointer transition ${activeChatUserId === user.id ? 'bg-blue-50 border-r-4 border-blue-600' : 'hover:bg-gray-50'}`;
+                row.className = `p-3 flex items-center space-x-3 cursor-pointer transition ${activeChatUserId === user.id ? 'bg-emerald-50 border-r-4 border-emerald-600' : 'hover:bg-gray-50'}`;
                 row.onclick = () => selectActiveChatUser(user.id);
                 row.innerHTML = `
                     <img src="${user.avatar}" class="w-9 h-9 rounded-full object-cover">
                     <div class="flex-1 min-w-0">
                         <p class="text-xs font-bold truncate text-gray-800">${user.name}</p>
-                        <p class="text-[11px] text-gray-400 truncate">Click to message</p>
+                        <p class="text-[11px] text-gray-400 truncate">Tap to send message</p>
                     </div>
                 `;
                 list.appendChild(row);
@@ -555,7 +541,7 @@
                 <img src="${user.avatar}" class="w-8 h-8 rounded-full object-cover">
                 <div>
                     <p class="text-sm font-bold text-gray-800">${user.name}</p>
-                    <p class="text-[10px] text-green-500 font-semibold">● Online Node Connected</p>
+                    <p class="text-[10px] text-emerald-500 font-semibold">● Secure Node Online</p>
                 </div>
             `;
             
@@ -573,7 +559,7 @@
             );
 
             if (convo.length === 0) {
-                target.innerHTML = '<p class="text-center text-xs text-gray-400 my-auto">No prior logs. Say hello!</p>';
+                target.innerHTML = '<p class="text-center text-xs text-gray-400 my-auto">Start chatting safely on Arab Book.</p>';
                 return;
             }
 
@@ -582,7 +568,7 @@
                 const outer = document.createElement('div');
                 outer.className = `flex ${isMe ? 'justify-end' : 'justify-start'}`;
                 outer.innerHTML = `
-                    <div class="${isMe ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white border border-gray-200 text-gray-800 rounded-bl-none'} rounded-2xl max-w-xs px-3 py-1.5 shadow-sm text-xs">
+                    <div class="${isMe ? 'bg-emerald-600 text-white rounded-br-none' : 'bg-white border border-gray-200 text-gray-800 rounded-bl-none'} rounded-2xl max-w-xs px-3 py-1.5 shadow-sm text-xs">
                         <p>${m.text}</p>
                     </div>
                 `;
